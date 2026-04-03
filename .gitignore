@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+node_modules/
+dist/
+.pytest_cache/
+ml/data/*.csv
+ml/trained_models/*.joblib
+postgres_data/
+.mypy_cache/
+.ruff_cache/
+coverage/
+htmlcov/
