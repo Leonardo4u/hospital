@@ -1,0 +1,45 @@
+services:
+  db:
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.backend
+      target: runtime
+    command: uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --workers 4
+    restart: unless-stopped
+    volumes: []
+    expose:
+      - "8000"
+    ports: []
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health')\""]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  frontend:
+    profiles: ["disabled"]
+
+  nginx:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.frontend
+      target: runtime
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
