@@ -11,3 +11,9 @@ postgres_data/
 .ruff_cache/
 coverage/
 htmlcov/
+
+# GSD artifacts
+.gsd/
+.gsd-id
+.gsd.migrating/
+gsd-2/
