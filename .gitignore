@@ -17,3 +17,6 @@ htmlcov/
 .gsd-id
 .gsd.migrating/
 gsd-2/
+
+# Local shell artifacts
+.bg-shell/
